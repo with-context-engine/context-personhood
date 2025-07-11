@@ -1,0 +1,23 @@
+{
+	"name": "context-personhood",
+	"private": true,
+	"version": "0.0.0",
+	"scripts": {
+		"dev": "convex dev",
+		"predev": "convex dev --until-success && convex dashboard",
+		"logs": "convex logs",
+		"lint": "biome lint --write",
+		"clean": "rm -rf convex/_generated node_modules"
+	},
+	"dependencies": {
+		"@types/node": "^24.0.13",
+		"convex": "^1.25.2",
+		"zod": "^4.0.5"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.1",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"typescript": "^5.8.3"
+	}
+}
