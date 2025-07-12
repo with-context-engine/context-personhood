@@ -19,7 +19,7 @@ export const processBlob = internalAction({
         await ctx.runMutation(internal.mutations.insertBlob.insertBlob, {
                 storageId: args.storageId,
                 mimeType: args.mimeType,
-            url: args.url,
+                url: args.url,
             });
         } catch (error) {
             console.error("[processBlob] Error inserting blob", error);

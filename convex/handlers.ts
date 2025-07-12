@@ -18,7 +18,6 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       });
     }
 
-    // Check MIME type
     if (!image.type.startsWith("image/")) {
       return new Response(JSON.stringify({ error: "File must be an image" }), {
         status: 400,
@@ -43,6 +42,7 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       mimeType: image.type,
     });
     
+    // Process the Blob
     if (url) {
       const _result = await ctx.runAction(
         internal.actions.processBlob.processBlob,
