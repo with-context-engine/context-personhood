@@ -13,8 +13,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as actions_processBlob from "../actions/processBlob.js";
 import type * as handlers from "../handlers.js";
 import type * as http from "../http.js";
+import type * as mutations_insertBlob from "../mutations/insertBlob.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -25,8 +27,10 @@ import type * as http from "../http.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "actions/processBlob": typeof actions_processBlob;
   handlers: typeof handlers;
   http: typeof http;
+  "mutations/insertBlob": typeof mutations_insertBlob;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
