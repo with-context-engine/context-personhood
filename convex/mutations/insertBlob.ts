@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { internalMutation } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
+import { internalMutation, MutationCtx } from "../_generated/server";
 
 export const insertBlob = internalMutation({
     args: {
@@ -7,13 +8,23 @@ export const insertBlob = internalMutation({
         mimeType: v.string(),
         url: v.string(),
     },
-    handler: async (ctx, args) => {
+    returns: v.object({
+        id: v.id("received"),
+    }),
+    handler: async (
+        ctx: MutationCtx,
+        args: { storageId: string; mimeType: string; url: string }
+    ): Promise<{ id: Id<"received"> }> => {
         const { storageId, mimeType, url } = args;
 
-        await ctx.db.insert("received", {
+        const _id = await ctx.db.insert("received", {
             storageId,
             mimeType,
             url,
         });
+
+        return {
+            id: _id,
+        };
     }
 })

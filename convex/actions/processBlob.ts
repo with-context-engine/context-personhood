@@ -1,37 +1,41 @@
 "use node";
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internal } from "../_generated/api";
-import { internalAction } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
+import { ActionCtx, internalAction } from "../_generated/server";
 
 export const processBlob = internalAction({
     args: {
-        storageId: v.string(),
+        storageId: v.id("_storage"),
         mimeType: v.string(),
         url: v.string(),
     },
     returns: v.object({
-        storageId: v.string(),
+        id: v.id("received"),
         success: v.boolean(),
     }),
-    handler: async (ctx, args) => {
+    handler: async (
+        ctx: ActionCtx,
+        args: { storageId: string; mimeType: string; url: string }
+    ): Promise<{ id: Id<"received">; success: boolean }> => {
         try {
-        await ctx.runMutation(internal.mutations.insertBlob.insertBlob, {
+            const { id } = await ctx.runMutation(internal.mutations.insertBlob.insertBlob, {
                 storageId: args.storageId,
                 mimeType: args.mimeType,
                 url: args.url,
             });
-        } catch (error) {
-            console.error("[processBlob] Error inserting blob", error);
+
             return {
-                storageId: args.storageId,
-                success: false,
+                id,
+                success: true,
             };
+
+        } catch (error) {
+            throw new ConvexError({
+                code: "internal",
+                message: `[processBlob] Error inserting blob: ${error}`,
+            });
         }
-        console.log("[processBlob] Blob inserted into Received Table.", args.storageId);
-        return {
-            storageId: args.storageId,
-            success: true,
-        };
     }
 })
