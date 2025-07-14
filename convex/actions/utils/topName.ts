@@ -11,7 +11,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const identifyTopName = async (nameList: string[]) => {
+export const identifyTopName = async (nameList: { name: string, score: number }[]) => {
     const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
@@ -19,7 +19,7 @@ export const identifyTopName = async (nameList: string[]) => {
                 role: "system",
                 content: `
                 You are a helpful assistant that identifies the most common real name from a list of possibly noisy names.
-                Return a structured JSON with the extracted real name.
+                Return a structured JSON with the extracted real name and its highest score from the list.
                 `
             },
             {
@@ -32,7 +32,7 @@ export const identifyTopName = async (nameList: string[]) => {
                 type: "function",
                 function: {
                     name: "identify_top_name",
-                    description: "Identify the most common real name from a list of names",
+                    description: "Identify the most common real name from a list of names and return the name with the highest score.",
                     parameters: {
                         type: "object",
                         properties: {
@@ -40,8 +40,12 @@ export const identifyTopName = async (nameList: string[]) => {
                                 type: "string",
                                 description: "The most likely real name from the list",
                             },
+                            score: {
+                                type: "number",
+                                description: "The highest score associated with the most likely real name from the list",
+                            },
                         },
-                        required: ["name"],
+                        required: ["name", "score"],
                     },
                 }
             }
@@ -64,6 +68,7 @@ export const identifyTopName = async (nameList: string[]) => {
     const args = JSON.parse(result.function.arguments);
     return {
         name: args.name,
+        score: args.score,
     }
 };
 

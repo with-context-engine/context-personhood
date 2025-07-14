@@ -5,14 +5,16 @@ export const insertTopName = internalMutation({
     args: {
         receivedId: v.id("received"),
         topName: v.string(),
+        score: v.number(),
     },
     handler: async (ctx, args) => {
         try {
-            const { receivedId, topName } = args;
+            const { receivedId, topName, score } = args;
 
             await ctx.db.insert("topName", {
                 receivedId,
                 topName,
+                score,
             });
         } catch (error) {
             throw new ConvexError({

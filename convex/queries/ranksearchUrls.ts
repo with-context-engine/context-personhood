@@ -17,22 +17,12 @@ export const rankSearchUrls = internalQuery({
       .filter((q) => q.eq(q.field("receivedId"), args.id))
       .collect();
 
-    // Exclude social media URLs
-    const filteredUrls = urls.filter(({ url }) => {
-      const lowerUrl = url.toLowerCase();
-      return !(
-        lowerUrl.includes("twitter.com") ||
-        lowerUrl.includes("facebook.com") ||
-        lowerUrl.includes("instagram.com") ||
-        lowerUrl.includes("x.com")
-      );
-    });
-
-    filteredUrls.sort((a, b) => {
+    // Sort by score (descending) and then by URL (ascending)
+    urls.sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
       return a.url.localeCompare(b.url);
     });
 
-    return filteredUrls.slice(0, 5).map(({ url, score }) => ({ url, score }));
+    return urls.slice(0, 5).map(({ url, score }) => ({ url, score }));
   },
 });

@@ -20,22 +20,18 @@ export const exaWebsetsExtraction = internalAction({
             })
         )
     },
-    returns: v.array(v.string()),
     handler: async (ctx, args) => {
         try {
-            const _websetUrls: string[] = [];
-            for (const object of args.objects) {
-                if (object.score > 50) {
-                    _websetUrls.push(object.url);
-                }
-            }
+            // Keep both url and score for mapping
+            const filteredObjects = args.objects.filter(obj => obj.score > 50);
+            const _websetUrls = filteredObjects.map(obj => obj.url);
+            const urlToScore = Object.fromEntries(filteredObjects.map(obj => [obj.url, obj.score]));
 
             if (_websetUrls.length === 0) {
                 return [];
             }
 
             const exa = new Exa(process.env.EXA_API_KEY);
-            
             const _results = await exa.getContents(
                 _websetUrls,
                 {
@@ -62,14 +58,14 @@ export const exaWebsetsExtraction = internalAction({
                   }
                 )
 
-            const extracted_names = extractHumanNamesFromExaResults(_results);
+            // Now extract names with url and score
+            const extracted = extractHumanNamesFromExaResults(_results, urlToScore);
 
             await ctx.runMutation(internal.mutations.insertExaSet.insertExaWebContentExtraction, {
                 receivedId: args.receivedId,
-                exaExtraction: extracted_names,
+                results: extracted,
             });
 
-            return extracted_names;
         } catch (error) {
             throw new ConvexError({
                 code: "internal",

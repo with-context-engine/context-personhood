@@ -29,6 +29,7 @@ import type * as mutations_insertFaceCheck from "../mutations/insertFaceCheck.js
 import type * as mutations_insertFaceCheckUrls from "../mutations/insertFaceCheckUrls.js";
 import type * as mutations_insertTopName from "../mutations/insertTopName.js";
 import type * as queries_getStorageId from "../queries/getStorageId.js";
+import type * as queries_getTopResults from "../queries/getTopResults.js";
 import type * as queries_ranksearchUrls from "../queries/ranksearchUrls.js";
 
 /**
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   "mutations/insertFaceCheckUrls": typeof mutations_insertFaceCheckUrls;
   "mutations/insertTopName": typeof mutations_insertTopName;
   "queries/getStorageId": typeof queries_getStorageId;
+  "queries/getTopResults": typeof queries_getTopResults;
   "queries/ranksearchUrls": typeof queries_ranksearchUrls;
 }>;
 export declare const api: FilterApi<

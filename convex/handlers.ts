@@ -62,18 +62,22 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
         id: result.id,
       });
 
-      const exaWebsets = await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+      await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
         receivedId: result.id,
         objects: ranked,
       });
-      
+
+      const _topResults = await ctx.runQuery(internal.queries.getTopResults.getTopResults, {
+        receivedId: result.id,
+      });
+
       const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
         receivedId: result.id,
-        nameList: exaWebsets,
+        nameList: _topResults,
       });
 
       return new Response(
-        `That's ${person.name}!`,
+        `That's ${person.name} ${person.score}% likely.`,
         {
           status: 200,
           headers: {

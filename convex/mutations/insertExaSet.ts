@@ -4,8 +4,12 @@ import { internalMutation } from "../_generated/server";
 export const insertExaWebContentExtraction = internalMutation({
     args: {
         receivedId: v.id("received"),
-        exaExtraction: v.array(
-            v.string(),
+        results: v.array(
+            v.object({
+                name: v.string(),
+                url: v.string(),
+                score: v.number(),
+            })
         ),
     },
     returns: v.object({
@@ -13,12 +17,14 @@ export const insertExaWebContentExtraction = internalMutation({
     }),
     handler: async (ctx, args) => {
         try {
-            const { receivedId, exaExtraction } = args;
+            const { receivedId, results } = args;
 
-            for (const exaContent of exaExtraction) {
+            for (const result of results) {
                 await ctx.db.insert("exaWebExtraction", {
                     receivedId,
-                    exaContentExtraction: exaContent,
+                    exaContentExtraction: result.name,
+                    url: result.url,
+                    score: result.score,
                 })
             }
 
