@@ -7,7 +7,7 @@ export async function retrieveFaceCheckResults(searchId: string): Promise<{ url:
         "id_search": searchId,
         "with_progress": true,
         "status_only": false,
-        "demo": true,
+        "demo": false,
     }
 
     try {

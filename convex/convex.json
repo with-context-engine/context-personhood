@@ -1,5 +1,5 @@
 {
 	"node": {
-		"externalPackages": ["@boundaryml/baml", "moondream"]
+		"externalPackages": ["moondream", "exa-js"]
 	}
 }

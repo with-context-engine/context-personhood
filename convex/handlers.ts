@@ -62,9 +62,16 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
         id: result.id,
       });
 
+      const _exaWebsets = await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+        objects: _ranked,
+      });
       
+      // const _name = await ctx.runAction(internal.actions.parseName.parseName, {
+      //   nameList: _exaWebsets,
+      // });
 
-      console.log("[receiveImageHandler] Ranked", _ranked);
+
+      console.log("[receiveImageHandler] Exa Websets", _exaWebsets);
     }
 
     return new Response(
