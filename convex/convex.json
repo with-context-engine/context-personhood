@@ -1,5 +1,5 @@
 {
 	"node": {
-		"externalPackages": ["moondream", "exa-js"]
+		"externalPackages": ["moondream", "exa-js", "openai"]
 	}
 }

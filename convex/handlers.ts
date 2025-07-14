@@ -58,30 +58,36 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
         id: result.id,
       });
 
-      const _ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
+      const ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
         id: result.id,
       });
 
-      const _exaWebsets = await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
-        objects: _ranked,
+      const exaWebsets = await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+        receivedId: result.id,
+        objects: ranked,
       });
       
-      // const _name = await ctx.runAction(internal.actions.parseName.parseName, {
-      //   nameList: _exaWebsets,
-      // });
+      const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
+        receivedId: result.id,
+        nameList: exaWebsets,
+      });
 
-
-      console.log("[receiveImageHandler] Exa Websets", _exaWebsets);
+      return new Response(
+        `That's ${person.name}!`,
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "text/plain",
+          }
+        }
+      )
     }
 
     return new Response(
-        `Received!`,
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "text/plain",
-            }
-        }
+      `Cannot identify.`,
+      {
+        status: 200,
+      }
     )
 
   } catch (e) {

@@ -2,6 +2,7 @@
 
 import { ConvexError, v } from "convex/values";
 import { Exa } from "exa-js";
+import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
 import { extractHumanNamesFromExaResults } from "./utils/extract";
 
@@ -11,6 +12,7 @@ if (!process.env.EXA_API_KEY) {
 
 export const exaWebsetsExtraction = internalAction({
     args: {
+        receivedId: v.id("received"),
         objects: v.array(
             v.object({
                 url: v.string(),
@@ -60,8 +62,14 @@ export const exaWebsetsExtraction = internalAction({
                   }
                 )
 
-            return extractHumanNamesFromExaResults(_results);
+            const extracted_names = extractHumanNamesFromExaResults(_results);
 
+            await ctx.runMutation(internal.mutations.insertExaSet.insertExaWebContentExtraction, {
+                receivedId: args.receivedId,
+                exaExtraction: extracted_names,
+            });
+
+            return extracted_names;
         } catch (error) {
             throw new ConvexError({
                 code: "internal",

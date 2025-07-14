@@ -1,19 +1,27 @@
 import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values"
+import { v } from "convex/values";
 
 export default defineSchema({
-    received: defineTable({
-        mimeType: v.string(),
-        storageId: v.id("_storage"),
-        url: v.string(),
-    }),
-    faceCheck: defineTable({
-        receivedId: v.id("received"),
-        faceCheckId: v.string(),
-    }),
-    faceCheckUrls: defineTable({
-        receivedId: v.id("received"),
-        url: v.string(),
-        score: v.number(),
-    }).index("by_receivedId", ["receivedId"]),
-})
+  exaWebExtraction: defineTable({
+    exaContentExtraction: v.string(),
+    receivedId: v.id("received"),
+  }),
+  faceCheck: defineTable({
+    faceCheckId: v.string(),
+    receivedId: v.id("received"),
+  }),
+  faceCheckUrls: defineTable({
+    receivedId: v.id("received"),
+    score: v.float64(),
+    url: v.string(),
+  }).index("by_receivedId", ["receivedId"]),
+  received: defineTable({
+    mimeType: v.string(),
+    storageId: v.id("_storage"),
+    url: v.string(),
+  }),
+  topName: defineTable({
+    receivedId: v.id("received"),
+    topName: v.string(),
+  }),
+});

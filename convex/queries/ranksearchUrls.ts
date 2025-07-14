@@ -14,6 +14,7 @@ export const rankSearchUrls = internalQuery({
   handler: async (ctx, args) => {
     const urls = await ctx.db
       .query("faceCheckUrls")
+      .filter((q) => q.eq(q.field("receivedId"), args.id))
       .collect();
 
     // Exclude social media URLs
