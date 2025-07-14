@@ -15,11 +15,15 @@ import type {
 } from "convex/server";
 import type * as actions_faceCheck from "../actions/faceCheck.js";
 import type * as actions_processBlob from "../actions/processBlob.js";
+import type * as actions_utils_search from "../actions/utils/search.js";
+import type * as actions_utils_upload from "../actions/utils/upload.js";
 import type * as handlers from "../handlers.js";
 import type * as http from "../http.js";
-import type * as mutations_faceCheckId from "../mutations/faceCheckId.js";
 import type * as mutations_insertBlob from "../mutations/insertBlob.js";
+import type * as mutations_insertFaceCheck from "../mutations/insertFaceCheck.js";
+import type * as mutations_insertFaceCheckUrls from "../mutations/insertFaceCheckUrls.js";
 import type * as queries_getStorageId from "../queries/getStorageId.js";
+import type * as queries_ranksearchUrls from "../queries/ranksearchUrls.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -32,11 +36,15 @@ import type * as queries_getStorageId from "../queries/getStorageId.js";
 declare const fullApi: ApiFromModules<{
   "actions/faceCheck": typeof actions_faceCheck;
   "actions/processBlob": typeof actions_processBlob;
+  "actions/utils/search": typeof actions_utils_search;
+  "actions/utils/upload": typeof actions_utils_upload;
   handlers: typeof handlers;
   http: typeof http;
-  "mutations/faceCheckId": typeof mutations_faceCheckId;
   "mutations/insertBlob": typeof mutations_insertBlob;
+  "mutations/insertFaceCheck": typeof mutations_insertFaceCheck;
+  "mutations/insertFaceCheckUrls": typeof mutations_insertFaceCheckUrls;
   "queries/getStorageId": typeof queries_getStorageId;
+  "queries/ranksearchUrls": typeof queries_ranksearchUrls;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -3,6 +3,8 @@
 import { ConvexError, v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
+import { retrieveFaceCheckResults } from "./utils/search";
+import { uploadToFaceCheck } from "./utils/upload";
 
 if (!process.env.FACECHECK_TOKEN) {
     throw new Error("FACECHECK_TOKEN is not set");
@@ -12,9 +14,6 @@ export const faceCheck = internalAction({
     args: {
         id: v.id("received")
     },
-    returns: v.object({
-        url: v.string()
-    }),
     handler: async (ctx, args) => {
         try {
             const storageId = await ctx.runQuery(internal.queries.getStorageId.getStorageId, {
@@ -37,37 +36,24 @@ export const faceCheck = internalAction({
                 });
             }
 
-            let form = new FormData();
-            form.append("images", blob, "image.jpg");
-            form.append("id_search", "")
+            // Upload to FaceCheck API using utility
+            const _data = await uploadToFaceCheck(blob);
 
-            const _response = await fetch("https://facecheck.id/api/upload_pic", {
-                method: "POST",
-                body: form,
-                headers: {
-                    "accept": "application/json",
-                    "Authorization": `${process.env.FACECHECK_TOKEN}`
-                }
-            });
-
-            if (!_response.ok) {
-                throw new ConvexError({
-                    code: "internal",
-                    message: `[FaceCheck] Error: ${_response.statusText}`,
-                });
-            }
-
-            const _data = await _response.json();
-            console.log(_data);
-
-            await ctx.runMutation(internal.mutations.faceCheckId.faceCheckId, {
+            await ctx.runMutation(internal.mutations.insertFaceCheck.faceCheckId, {
                 id: args.id,
                 faceCheckId: _data.id_search,
             });
 
-            return {
-                url: ""
-            };
+            console.log("[FaceCheck] FaceCheckId Inserted:", _data.id_search);
+
+            // Return Results from FaceCheck
+            const _results = await retrieveFaceCheckResults(_data.id_search);
+
+            await ctx.runMutation(internal.mutations.insertFaceCheckUrls.insertFaceCheckUrls, {
+                id: args.id,
+                objects: _results,
+            });
+
         } catch (error) {
             throw new ConvexError({
                 code: "internal",

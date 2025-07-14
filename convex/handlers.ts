@@ -44,7 +44,7 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
     
     // Process the Blob
     if (url) {
-      const _result = await ctx.runAction(
+      const result = await ctx.runAction(
         internal.actions.processBlob.processBlob,
         {
           storageId,
@@ -52,7 +52,19 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
           url,
         }
       )
-      console.log("[receiveImageHandler] Image processed", _result);
+      console.log("[receiveImageHandler] Image processed", result);
+
+      await ctx.runAction(internal.actions.faceCheck.faceCheck, {
+        id: result.id,
+      });
+
+      const _ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
+        id: result.id,
+      });
+
+      
+
+      console.log("[receiveImageHandler] Ranked", _ranked);
     }
 
     return new Response(

@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "convex dev",
-		"predev": "convex dev --until-success && convex dashboard",
+		"predev": "convex dev --until-success",
 		"logs": "convex logs",
 		"lint": "biome lint --write",
 		"clean": "rm -rf convex/_generated node_modules"

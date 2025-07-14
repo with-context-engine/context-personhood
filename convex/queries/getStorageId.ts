@@ -15,6 +15,6 @@ export const getStorageId = internalQuery({
         message: "Received ID not found",
       });
     }
-    return document.storageId;
+    return document.storageId as Id<"_storage">;
   }
 })
