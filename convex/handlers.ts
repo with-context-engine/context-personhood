@@ -1,3 +1,4 @@
+import { internal } from "./_generated/api"
 import { httpAction } from "./_generated/server";
 
 export const helloHandler = httpAction(async (ctx, request) => {
@@ -17,7 +18,6 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       });
     }
 
-    // Check MIME type
     if (!image.type.startsWith("image/")) {
       return new Response(JSON.stringify({ error: "File must be an image" }), {
         status: 400,
@@ -31,13 +31,9 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       type: image.type,
     });
 
-    // Create a Blob from the ArrayBuffer
+    // Create a Blob from the ArrayBuffer and store the image
     const blob = new Blob([arrayBuffer], { type: image.type });
-    
-    // Store the blob directly in Convex storage
     const storageId = await ctx.storage.store(blob);
-    
-    // Get the URL for the stored file
     const url = await ctx.storage.getUrl(storageId);
     
     console.log("[receiveImageHandler] Image stored", {
@@ -45,13 +41,38 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       size: arrayBuffer.byteLength,
       mimeType: image.type,
     });
+    
+    // Process the Blob
+    if (url) {
+      const result = await ctx.runAction(
+        internal.actions.processBlob.processBlob,
+        {
+          storageId,
+          mimeType: image.type,
+          url,
+        }
+      )
+      console.log("[receiveImageHandler] Image processed", result);
 
-    const _result = {
-      storageId,
-      url,
-      size: arrayBuffer.byteLength,
-      mimeType: image.type,
-    };
+      await ctx.runAction(internal.actions.faceCheck.faceCheck, {
+        id: result.id,
+      });
+
+      const _ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
+        id: result.id,
+      });
+
+      const _exaWebsets = await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+        objects: _ranked,
+      });
+      
+      // const _name = await ctx.runAction(internal.actions.parseName.parseName, {
+      //   nameList: _exaWebsets,
+      // });
+
+
+      console.log("[receiveImageHandler] Exa Websets", _exaWebsets);
+    }
 
     return new Response(
         `Received!`,

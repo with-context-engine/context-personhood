@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "convex dev",
-		"predev": "convex dev --until-success && convex dashboard",
+		"predev": "convex dev --until-success",
 		"logs": "convex logs",
 		"lint": "biome lint --write",
 		"clean": "rm -rf convex/_generated node_modules"
@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@types/node": "^24.0.13",
 		"convex": "^1.25.2",
+		"exa-js": "^1.8.20",
 		"zod": "^4.0.5"
 	},
 	"devDependencies": {
