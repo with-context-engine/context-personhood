@@ -4,6 +4,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "convex dev",
+		"prod": "convex deploy",
 		"predev": "convex dev --until-success",
 		"logs": "convex logs",
 		"lint": "biome lint --write",

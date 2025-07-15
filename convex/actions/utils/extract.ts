@@ -2,6 +2,11 @@
 
 import { ConvexError } from "convex/values";
 
+export function normalizeUrl(url: string): string {
+  // Remove protocol and www. prefix for consistent comparison
+  return url.replace(/^https?:\/\/(www\.)?/, "https://");
+}
+
 export function extractHumanNamesFromExaResults(_results: any, urlToScore: Record<string, number>): { name: string, url: string, score: number }[] {
   let results: { name: string, url: string, score: number }[] = [];
 
@@ -11,7 +16,7 @@ export function extractHumanNamesFromExaResults(_results: any, urlToScore: Recor
         try {
           const summaryObj = JSON.parse(result.summary);
           if (Array.isArray(summaryObj.names)) {
-            const score = urlToScore[result.url];
+            const score = urlToScore[normalizeUrl(result.url)];
             if (score === undefined) {
               console.warn(`[extractHumanNamesFromExaResults] Score not found for URL: ${result.url}`);
               continue;

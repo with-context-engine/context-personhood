@@ -4,7 +4,7 @@ import { ConvexError, v } from "convex/values";
 import { Exa } from "exa-js";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
-import { extractHumanNamesFromExaResults } from "./utils/extract";
+import { extractHumanNamesFromExaResults, normalizeUrl } from "./utils/extract";
 
 if (!process.env.EXA_API_KEY) {
     throw new Error("EXA_API_KEY is not set");
@@ -25,7 +25,7 @@ export const exaWebsetsExtraction = internalAction({
             // Keep both url and score for mapping
             const filteredObjects = args.objects.filter(obj => obj.score > 50);
             const _websetUrls = filteredObjects.map(obj => obj.url);
-            const urlToScore = Object.fromEntries(filteredObjects.map(obj => [obj.url, obj.score]));
+            const urlToScore = Object.fromEntries(filteredObjects.map(obj => [normalizeUrl(obj.url), obj.score]));
 
             if (_websetUrls.length === 0) {
                 return [];
@@ -58,6 +58,9 @@ export const exaWebsetsExtraction = internalAction({
                   }
                 )
 
+
+            console.log("[exaWebsetsExtraction] _results", _results);
+            console.log("[exaWebsetsExtraction] urlToScore", urlToScore);
             // Now extract names with url and score
             const extracted = extractHumanNamesFromExaResults(_results, urlToScore);
 
