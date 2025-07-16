@@ -1,3 +1,4 @@
+import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api"
 import { httpAction } from "./_generated/server";
 
@@ -35,13 +36,7 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
     const blob = new Blob([arrayBuffer], { type: image.type });
     const storageId = await ctx.storage.store(blob);
     const url = await ctx.storage.getUrl(storageId);
-    
-    console.log("[receiveImageHandler] Image stored", {
-      storageId,
-      size: arrayBuffer.byteLength,
-      mimeType: image.type,
-    });
-    
+        
     // Process the Blob
     if (url) {
       const result = await ctx.runAction(
@@ -52,32 +47,50 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
           url,
         }
       )
-      console.log("[receiveImageHandler] Image processed", result);
 
-      await ctx.runAction(internal.actions.faceCheck.faceCheck, {
-        id: result.id,
-      });
+      // TODO:
+      // 1. Process the image with Moondream
+      // 2. Create a mutation to store the image in the database
+      // 3. Return the Id of the image manipulated by Moondream to the next step
 
-      const ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
-        id: result.id,
-      });
-
-      await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
-        receivedId: result.id,
-        objects: ranked,
-      });
-
-      const _topResults = await ctx.runQuery(internal.queries.getTopResults.getTopResults, {
+      const moondreamId = await ctx.runAction(internal.actions.moondream.moondreamCrop, {
         receivedId: result.id,
       });
 
-      const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
-        receivedId: result.id,
-        nameList: _topResults,
-      });
+      if (!moondreamId) {
+        throw new ConvexError({
+          code: "internal",
+          message: `[receiveImageHandler] Moondream ID not found`,
+        });
+      }
+
+      console.log("[receiveImageHandler] Image processed", moondreamId);
+
+      // await ctx.runAction(internal.actions.faceCheck.faceCheck, {
+      //   id: moondreamId,
+      // });
+
+      // const ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
+      //   id: result.id,
+      // });
+
+      // await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+      //   receivedId: result.id,
+      //   objects: ranked,
+      // });
+
+      // const _topResults = await ctx.runQuery(internal.queries.getTopResults.getTopResults, {
+      //   receivedId: result.id,
+      // });
+
+      // const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
+      //   receivedId: result.id,
+      //   nameList: _topResults,
+      // });
 
       return new Response(
-        `That's ${person.name} ${person.score}% likely.`,
+        // `That's ${person.name} ${person.score}% likely.`,
+        'Received Image',
         {
           status: 200,
           headers: {
