@@ -3,7 +3,7 @@ import { internalMutation } from "../_generated/server";
 
 export const insertExaWebContentExtraction = internalMutation({
     args: {
-        receivedId: v.id("received"),
+        receivedId: v.id("moondream"),
         results: v.array(
             v.object({
                 name: v.string(),
@@ -13,7 +13,7 @@ export const insertExaWebContentExtraction = internalMutation({
         ),
     },
     returns: v.object({
-        receivedId: v.id("received"),
+        receivedId: v.id("moondream"),
     }),
     handler: async (ctx, args) => {
         try {

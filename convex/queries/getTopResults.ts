@@ -3,7 +3,7 @@ import { internalQuery } from "../_generated/server";
 
 export const getTopResults = internalQuery({
   args: {
-    receivedId: v.id("received"),
+    receivedId: v.id("moondream"),
   },
   returns: v.array(
     v.object({

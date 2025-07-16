@@ -22,6 +22,12 @@ export default defineSchema({
     storageId: v.id("_storage"),
     url: v.string(),
   }),
+  moondream: defineTable({
+    receivedId: v.id("received"),
+    storageId: v.id("_storage"),
+    mimeType: v.string(),
+    url: v.string(),
+  }),
   topName: defineTable({
     receivedId: v.id("received"),
     topName: v.string(),

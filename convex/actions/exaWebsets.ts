@@ -12,7 +12,7 @@ if (!process.env.EXA_API_KEY) {
 
 export const exaWebsetsExtraction = internalAction({
     args: {
-        receivedId: v.id("received"),
+        receivedId: v.id("moondream"),
         objects: v.array(
             v.object({
                 url: v.string(),
@@ -61,7 +61,7 @@ export const exaWebsetsExtraction = internalAction({
 
             console.log("[exaWebsetsExtraction] _results", _results);
             console.log("[exaWebsetsExtraction] urlToScore", urlToScore);
-            // Now extract names with url and score
+
             const extracted = extractHumanNamesFromExaResults(_results, urlToScore);
 
             await ctx.runMutation(internal.mutations.insertExaSet.insertExaWebContentExtraction, {

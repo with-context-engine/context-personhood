@@ -3,7 +3,7 @@ import { internalQuery } from "../_generated/server";
 
 export const rankSearchUrls = internalQuery({
   args: {
-    id: v.id("received"),
+    id: v.id("moondream"),
   },
   returns: v.array(
     v.object({
