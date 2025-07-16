@@ -3,14 +3,14 @@ import { internalMutation } from "../_generated/server";
 
 export const insertFaceCheckUrls = internalMutation({
     args: {
-        id: v.id("received"),
+        id: v.id("moondream"),
         objects: v.array(v.object({
             url: v.string(),
             score: v.number(),
         })),
     },
     returns: v.object({
-        id: v.id("received"),
+        id: v.id("moondream"),
     }),
     handler: async (ctx, args) => {
         try {
@@ -23,6 +23,11 @@ export const insertFaceCheckUrls = internalMutation({
                     score: object.score,
                 });
             }
+
+            console.log("[insertFaceCheckUrls] FaceCheckUrls inserted", {
+                id,
+                objects,
+            });
 
             return {
                 id,

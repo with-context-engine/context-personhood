@@ -3,7 +3,7 @@ import { internalMutation } from "../_generated/server";
 
 export const insertTopName = internalMutation({
     args: {
-        receivedId: v.id("received"),
+        receivedId: v.id("moondream"),
         topName: v.string(),
         score: v.number(),
     },

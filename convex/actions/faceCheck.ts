@@ -12,11 +12,11 @@ if (!process.env.FACECHECK_TOKEN) {
 
 export const faceCheck = internalAction({
     args: {
-        id: v.id("received")
+        id: v.id("moondream")
     },
     handler: async (ctx, args) => {
         try {
-            const storageId = await ctx.runQuery(internal.queries.getStorageId.getStorageId, {
+            const storageId = await ctx.runQuery(internal.queries.getMoondreamStorageId.getMoondreamStorageId, {
                 id: args.id 
             });
 

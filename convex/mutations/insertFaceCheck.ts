@@ -3,7 +3,7 @@ import { internalMutation } from "../_generated/server";
 
 export const faceCheckId = internalMutation({
     args: {
-        id: v.id("received"),
+        id: v.id("moondream"),
         faceCheckId: v.string(),
     },
     returns: v.object({

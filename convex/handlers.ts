@@ -66,31 +66,36 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
 
       console.log("[receiveImageHandler] Image processed", moondreamId);
 
-      // await ctx.runAction(internal.actions.faceCheck.faceCheck, {
-      //   id: moondreamId,
-      // });
+      await ctx.runAction(internal.actions.faceCheck.faceCheck, {
+        id: moondreamId.id,
+      });
 
-      // const ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
-      //   id: result.id,
-      // });
+      console.log("[receiveImageHandler] FaceCheck Run.");
 
-      // await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
-      //   receivedId: result.id,
-      //   objects: ranked,
-      // });
+      const ranked = await ctx.runQuery(internal.queries.ranksearchUrls.rankSearchUrls, {
+        id: moondreamId.id,
+      });
 
-      // const _topResults = await ctx.runQuery(internal.queries.getTopResults.getTopResults, {
-      //   receivedId: result.id,
-      // });
+      console.log("[receiveImageHandler] Ranked", ranked);
 
-      // const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
-      //   receivedId: result.id,
-      //   nameList: _topResults,
-      // });
+      await ctx.runAction(internal.actions.exaWebsets.exaWebsetsExtraction, {
+        receivedId: moondreamId.id,
+        objects: ranked,
+      });
+
+      const _topResults = await ctx.runQuery(internal.queries.getTopResults.getTopResults, {
+        receivedId: moondreamId.id,
+      });
+
+      const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
+        receivedId: moondreamId.id,
+        nameList: _topResults,
+      });
+
+      console.log("[receiveImageHandler] Person", person);
 
       return new Response(
-        // `That's ${person.name} ${person.score}% likely.`,
-        'Received Image',
+        `That's ${person.name} ${person.score}% likely.`,
         {
           status: 200,
           headers: {

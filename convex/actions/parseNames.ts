@@ -7,7 +7,7 @@ import { identifyTopName } from "./utils/topName";
 
 export const parseNames = internalAction({
     args: {
-        receivedId: v.id("received"),
+        receivedId: v.id("moondream"),
         nameList: v.array(
             v.object({
                 name: v.string(),
