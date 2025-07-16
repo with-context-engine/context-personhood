@@ -15,7 +15,7 @@ export function extractHumanNamesFromExaResults(_results: any, urlToScore: Recor
         try {
           const summaryObj = JSON.parse(result.summary);
           if (Array.isArray(summaryObj.names)) {
-            const score = urlToScore[normalizeUrl(result.url)];
+            const score = urlToScore[normalizeUrl(normalizeUrl(result.url))];
             if (score === undefined) {
               console.warn(`[extractHumanNamesFromExaResults] Score not found for URL: ${result.url}`);
               continue;
