@@ -6,6 +6,7 @@ export const insertExaWebContentExtraction = internalMutation({
         receivedId: v.id("moondream"),
         results: v.array(
             v.object({
+                id: v.string(),
                 name: v.string(),
                 url: v.string(),
                 score: v.number(),
@@ -22,6 +23,7 @@ export const insertExaWebContentExtraction = internalMutation({
             for (const result of results) {
                 await ctx.db.insert("exaWebExtraction", {
                     receivedId,
+                    id: result.id,
                     exaContentExtraction: result.name,
                     url: result.url,
                     score: result.score,

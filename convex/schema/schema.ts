@@ -5,6 +5,7 @@ export default defineSchema({
   exaWebExtraction: defineTable({
     exaContentExtraction: v.string(),
     receivedId: v.id("received"),
+    id: v.id("faceCheckUrls"),
     url: v.string(),
     score: v.number(),
   }),
@@ -16,6 +17,7 @@ export default defineSchema({
     receivedId: v.id("received"),
     score: v.float64(),
     url: v.string(),
+    base64: v.string(),
   }).index("by_receivedId", ["receivedId"]),
   received: defineTable({
     mimeType: v.string(),
@@ -32,5 +34,7 @@ export default defineSchema({
     receivedId: v.id("received"),
     topName: v.string(),
     score: v.number(),
+    photoUrl: v.string(),
+    faceCheckUrlPhotoId: v.id("faceCheckUrls"),
   }),
 });

@@ -6,8 +6,11 @@ export function normalizeUrl(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/, "https://");
 }
 
-export function extractHumanNamesFromExaResults(_results: any, urlToScore: Record<string, number>): { name: string, url: string, score: number }[] {
-  let results: { name: string, url: string, score: number }[] = [];
+export function extractHumanNamesFromExaResults(
+  _results: any,
+  urlToIdScore: Record<string, { id: string, score: number }>
+): { id: string, name: string, url: string, score: number }[] {
+  let results: { id: string, name: string, url: string, score: number }[] = [];
 
   if (_results?.results) {
     for (const result of _results.results) {
@@ -15,19 +18,20 @@ export function extractHumanNamesFromExaResults(_results: any, urlToScore: Recor
         try {
           const summaryObj = JSON.parse(result.summary);
           if (Array.isArray(summaryObj.names)) {
-            const score = urlToScore[normalizeUrl(normalizeUrl(result.url))];
-            if (score === undefined) {
-              console.warn(`[extractHumanNamesFromExaResults] Score not found for URL: ${result.url}`);
+            const normUrl = normalizeUrl(result.url);
+            const idScore = urlToIdScore[normUrl];
+            if (!idScore) {
+              console.warn(`[extractHumanNamesFromExaResults] id/score not found for URL: ${result.url}`);
               continue;
             }
             for (const name of summaryObj.names) {
-              results.push({ name, url: result.url, score });
+              results.push({ id: idScore.id, name, url: result.url, score: idScore.score });
             }
           }
         } catch (e) {
           throw new ConvexError({
             code: "internal",
-            message: `[extractHumanNamesFromExaResults] Failed to parse summary for ${result.id}: ${e}`,
+            message: `[extractHumanNamesFromExaResults] Failed to parse summary for ${result.url}: ${e}`,
           });
         }
       }

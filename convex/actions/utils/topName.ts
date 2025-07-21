@@ -2,6 +2,7 @@
 
 import { ConvexError } from "convex/values";
 import { OpenAI } from "openai";
+import { Id } from "../../_generated/dataModel";
 
 if (!process.env.OPENAI_API_KEY) {
     throw new ConvexError("OPENAI_API_KEY is not set");
@@ -11,7 +12,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const identifyTopName = async (nameList: { name: string, score: number }[]) => {
+export const identifyTopName = async (nameList: { name: string, score: number, faceCheckUrlPhotoId: Id<"faceCheckUrls"> }[]) => {
     const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
@@ -44,8 +45,12 @@ export const identifyTopName = async (nameList: { name: string, score: number }[
                                 type: "number",
                                 description: "The highest score associated with the most likely real name from the list",
                             },
+                            faceCheckUrlPhotoId: {
+                                type: "string",
+                                description: "Do not manipulate or use this id in any way. It is used to retrieve the photo from the database.",
+                            },
                         },
-                        required: ["name", "score"],
+                        required: ["name", "score", "faceCheckUrlPhotoId"],
                     },
                 }
             }
@@ -69,6 +74,7 @@ export const identifyTopName = async (nameList: { name: string, score: number }[
     return {
         name: args.name,
         score: args.score,
+        faceCheckUrlPhotoId: args.faceCheckUrlPhotoId,
     }
 };
 

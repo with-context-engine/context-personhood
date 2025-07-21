@@ -87,6 +87,8 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
         receivedId: moondreamId.id,
       });
 
+      console.log("[receiveImageHandler] Top Results", _topResults);
+
       const person = await ctx.runAction(internal.actions.parseNames.parseNames, {
         receivedId: moondreamId.id,
         nameList: _topResults,
@@ -94,12 +96,23 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
 
       console.log("[receiveImageHandler] Person", person);
 
+      // Format the text as specified with dynamic name and score
+      const text = `Might be ${person.name}\n${person.score}% confident.`;
+
+      // Build the ApiResponse object
+      const apiResponse = {
+        text: text,
+        thumbUri: person.photoUrl || null,
+        thumbWidth: person.width || null,
+        thumbHeight: person.height || null,
+      };
+
       return new Response(
-        `That's ${person.name} ${person.score}% likely.`,
+        JSON.stringify(apiResponse),
         {
           status: 200,
           headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
           }
         }
       )
