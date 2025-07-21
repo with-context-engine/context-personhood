@@ -44,8 +44,6 @@ export const faceCheck = internalAction({
                 faceCheckId: _data.id_search,
             });
 
-            console.log("[FaceCheck] FaceCheckId Inserted:", _data.id_search);
-
             // Return Results from FaceCheck
             const _results = await retrieveFaceCheckResults(_data.id_search);
 

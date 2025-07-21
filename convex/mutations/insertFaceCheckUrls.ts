@@ -7,6 +7,7 @@ export const insertFaceCheckUrls = internalMutation({
         objects: v.array(v.object({
             url: v.string(),
             score: v.number(),
+            base64: v.string(),
         })),
     },
     returns: v.object({
@@ -21,6 +22,7 @@ export const insertFaceCheckUrls = internalMutation({
                     receivedId: id,
                     url: object.url,
                     score: object.score,
+                    base64: object.base64,
                 });
             }
 

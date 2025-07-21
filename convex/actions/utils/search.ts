@@ -2,7 +2,7 @@
 
 import { ConvexError, v } from "convex/values";
 
-export async function retrieveFaceCheckResults(searchId: string): Promise<{ url: string; score: number; }[]> {
+export async function retrieveFaceCheckResults(searchId: string): Promise<{ url: string; score: number; base64: string; }[]> {
     const payload = {
         "id_search": searchId,
         "with_progress": true,
@@ -39,9 +39,10 @@ export async function retrieveFaceCheckResults(searchId: string): Promise<{ url:
             }
 
             if (_data.output) {
-                return _data.output.items.map((item: { url: string; score: number; }) => ({
+                return _data.output.items.map((item: { url: string; score: number; base64: string; }) => ({
                     url: item.url,
                     score: item.score,
+                    base64: item.base64,
                 }));
             }
 

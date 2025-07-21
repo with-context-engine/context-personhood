@@ -18,6 +18,7 @@ import type * as actions_faceCheck from "../actions/faceCheck.js";
 import type * as actions_moondream from "../actions/moondream.js";
 import type * as actions_parseNames from "../actions/parseNames.js";
 import type * as actions_processBlob from "../actions/processBlob.js";
+import type * as actions_utils_convert from "../actions/utils/convert.js";
 import type * as actions_utils_extract from "../actions/utils/extract.js";
 import type * as actions_utils_modal from "../actions/utils/modal.js";
 import type * as actions_utils_search from "../actions/utils/search.js";
@@ -32,6 +33,7 @@ import type * as mutations_insertFaceCheckUrls from "../mutations/insertFaceChec
 import type * as mutations_insertMoondreamBlob from "../mutations/insertMoondreamBlob.js";
 import type * as mutations_insertTopName from "../mutations/insertTopName.js";
 import type * as queries_getMoondreamStorageId from "../queries/getMoondreamStorageId.js";
+import type * as queries_getPhotoString from "../queries/getPhotoString.js";
 import type * as queries_getStorageId from "../queries/getStorageId.js";
 import type * as queries_getTopResults from "../queries/getTopResults.js";
 import type * as queries_ranksearchUrls from "../queries/ranksearchUrls.js";
@@ -50,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   "actions/moondream": typeof actions_moondream;
   "actions/parseNames": typeof actions_parseNames;
   "actions/processBlob": typeof actions_processBlob;
+  "actions/utils/convert": typeof actions_utils_convert;
   "actions/utils/extract": typeof actions_utils_extract;
   "actions/utils/modal": typeof actions_utils_modal;
   "actions/utils/search": typeof actions_utils_search;
@@ -64,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   "mutations/insertMoondreamBlob": typeof mutations_insertMoondreamBlob;
   "mutations/insertTopName": typeof mutations_insertTopName;
   "queries/getMoondreamStorageId": typeof queries_getMoondreamStorageId;
+  "queries/getPhotoString": typeof queries_getPhotoString;
   "queries/getStorageId": typeof queries_getStorageId;
   "queries/getTopResults": typeof queries_getTopResults;
   "queries/ranksearchUrls": typeof queries_ranksearchUrls;

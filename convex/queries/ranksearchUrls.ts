@@ -7,6 +7,7 @@ export const rankSearchUrls = internalQuery({
   },
   returns: v.array(
     v.object({
+      id: v.string(),
       url: v.string(),
       score: v.number(),
     })
@@ -17,12 +18,13 @@ export const rankSearchUrls = internalQuery({
       .filter((q) => q.eq(q.field("receivedId"), args.id))
       .collect();
 
-    // Sort by score (descending) and then by URL (ascending)
-    urls.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.url.localeCompare(b.url);
-    });
+    const filtered = urls
+      .filter((u) => u.base64 != null)
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.url.localeCompare(b.url);
+      });
 
-    return urls.slice(0, 5).map(({ url, score }) => ({ url, score }));
+    return filtered.slice(0, 5).map(({ _id, url, score }) => ({ id: _id, url, score }));
   },
 });
