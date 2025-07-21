@@ -97,7 +97,7 @@ export const receiveImageHandler = httpAction(async (ctx, request) => {
       console.log("[receiveImageHandler] Person", person);
 
       // Format the text as specified with dynamic name and score
-      const text = `Might be ${person.name}\n${person.score}% confident.`;
+      const text = `${person.name}\n${person.score}% confident.`;
 
       // Build the ApiResponse object
       const apiResponse = {
